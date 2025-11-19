@@ -91,6 +91,7 @@ export default new Elysia()
 
       const typeMap = { j: 'jpg', p: 'png', w: 'webp' };
       const coverUrl = `/cover/${data.media_id}/${typeMap[data.images.cover.t as keyof typeof typeMap] || 'jpg'}`
+      const uploadDate = new Date(data.upload_date * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
       const tags = data.tags.reduce((acc: any, tag: any) => {
         if (!acc[tag.type]) acc[tag.type] = [];
         acc[tag.type].push({ name: tag.name });
@@ -100,7 +101,10 @@ export default new Elysia()
       return `
         <div class="bg-neutral-800 overflow-hidden p-6">
           <div class="flex justify-between items-start mb-4">
-            <h2 class="text-2xl font-bold">${data.title.pretty}</h2>
+            <div>
+              <h2 class="text-2xl font-bold">${data.title.pretty}</h2>
+              <p class="text-sm text-gray-400 mt-1">Uploaded: ${uploadDate}</p>
+            </div>
             <a href="https://nhentai.net/g/${id}" target="_blank" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded transition">Visit</a>
           </div>
           <div class="mb-6">
