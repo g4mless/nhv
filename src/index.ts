@@ -68,6 +68,7 @@ const indexHtml = `<!DOCTYPE html>
 
 export default new Elysia()
   .use(html())
+  //.get("/", () => Bun.file("public/index.html").text())
   .get("/", () => indexHtml)
 
   .get("/view/:id", async ({ params, set }) => {
@@ -87,7 +88,10 @@ export default new Elysia()
 
       return `
         <div class="bg-neutral-800 overflow-hidden p-6">
-          <h2 class="text-2xl font-bold mb-4">${data.title.pretty}</h2>
+          <div class="flex justify-between items-start mb-4">
+            <h2 class="text-2xl font-bold">${data.title.pretty}</h2>
+            <a href="https://nhentai.net/g/${id}" target="_blank" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded transition">Visit</a>
+          </div>
           <div class="mb-6">
             <img src="${coverUrl}" alt="Cover" class="spoiler w-48 h-auto">
             <p class="text-sm text-gray-400 mt-2">Click to reveal</p>
