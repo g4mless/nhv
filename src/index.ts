@@ -113,7 +113,7 @@ export default new Elysia()
               <div>
                 <h3 class="text-lg font-semibold text-red-700 capitalize">${type}</h3>
                 <div class="flex flex-wrap gap-2 mt-2">
-                  ${items.map((tag: any) => `<span class="bg-neutral-700 px-3 py-1 rounded-sm text-sm">${tag.name}</span>`).join('')}
+                  ${items.map((tag: any) => `<span class="bg-neutral-700 px-3 py-1 rounded-md text-md font-semibold">${tag.name}</span>`).join('')}
                 </div>
               </div>
             `).join('')}
