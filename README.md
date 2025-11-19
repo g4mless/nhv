@@ -1,15 +1,8 @@
-# Elysia with Bun runtime
+# nhv - nhentai viewer
+A simple viewer for nhentai galleries built with Bun + Elysia + HTMX + Tailwind.
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
-```bash
-bun create elysia ./elysia-example
-```
+## Why do i even build this?
+i don't really know, i build this coz my friend send me nhentai code everyday lol.
+And as you know, nhentai is blocked in some country, so i build this as a proxy for it.
 
-## Development
-To start the development server run:
-```bash
-bun run dev
-```
-
-Open http://localhost:3000/ with your browser to see the result.
+you can deploy this easily on vercel by simply just clone this repo & deploy to your vercel account.
