@@ -5,7 +5,7 @@ import { staticPlugin } from '@elysiajs/static'
 export default new Elysia()
   .use(html())
   .use(staticPlugin({ assets: "public" }))
-  .get("/", () => Bun.file("public/index.html").text())
+  .get("/", () => Bun.file(`${import.meta.dir}/../public/index.html`).text())
 
   .get("/view/:id", async ({ params, set }) => {
     const { id } = params;
