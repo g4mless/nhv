@@ -15,7 +15,6 @@ const indexHtml = `<!DOCTYPE html>
       transition: filter 0.3s ease;
       cursor: pointer;
     }
-    .spoiler:hover,
     .spoiler.revealed {
       filter: blur(0px);
     }
