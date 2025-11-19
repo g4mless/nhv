@@ -2,7 +2,7 @@ import { Elysia, t } from "elysia";
 import { html } from "@elysiajs/html";
 import { staticPlugin } from '@elysiajs/static'
 
-const app = new Elysia()
+export default new Elysia()
   .use(html())
   .use(staticPlugin({ assets: "public" }))
   .get("/", () => Bun.file("public/index.html").text())
@@ -32,7 +32,7 @@ const app = new Elysia()
           <div class="space-y-4">
             ${Object.entries(tags).map(([type, items]: any) => `
               <div>
-                <h3 class="text-lg font-semibold text-red-400 capitalize">${type}</h3>
+                <h3 class="text-lg font-semibold text-red-700 capitalize">${type}</h3>
                 <div class="flex flex-wrap gap-2 mt-2">
                   ${items.map((tag: any) => `<span class="bg-neutral-700 px-3 py-1 rounded-sm text-sm">${tag.name}</span>`).join('')}
                 </div>
@@ -47,9 +47,3 @@ const app = new Elysia()
   }, {
     params: t.Object({ id: t.String()})
   })
-
-  .listen(3000);
-
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
