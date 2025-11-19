@@ -71,6 +71,18 @@ export default new Elysia()
   //.get("/", () => Bun.file("public/index.html").text())
   .get("/", () => indexHtml)
 
+  .get("/cover/:mediaId/:type", async ({ params }) => {
+    const { mediaId, type } = params;
+    const coverUrl = `https://t1.nhentai.net/galleries/${mediaId}/cover.${type}`;
+    
+    const response = await fetch(coverUrl);
+    return new Response(response.body, {
+      headers: { "Content-Type": response.headers.get("content-type") || "image/jpeg" }
+    });
+  }, {
+    params: t.Object({ mediaId: t.String(), type: t.String() })
+  })
+
   .get("/view/:id", async ({ params, set }) => {
     const { id } = params;
 
@@ -79,7 +91,7 @@ export default new Elysia()
       const data = await res.json()
 
       const typeMap = { j: 'jpg', p: 'png', w: 'webp' };
-      const coverUrl = `https://t1.nhentai.net/galleries/${data.media_id}/cover.${typeMap[data.images.cover.t as keyof typeof typeMap] || 'jpg'}`;
+      const coverUrl = `/cover/${data.media_id}/${typeMap[data.images.cover.t as keyof typeof typeMap] || 'jpg'}`
       const tags = data.tags.reduce((acc: any, tag: any) => {
         if (!acc[tag.type]) acc[tag.type] = [];
         acc[tag.type].push({ name: tag.name });
