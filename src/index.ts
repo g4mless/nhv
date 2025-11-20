@@ -1,5 +1,8 @@
 import { Elysia, t } from "elysia";
 import { html } from "@elysiajs/html";
+import { join } from "path";
+
+const indexPath = join(import.meta.dir, "../public/index.html");
 
 const indexHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -69,7 +72,7 @@ export default new Elysia()
   .use(html())
   //.get("/", () => Bun.file("public/index.html").text())
   //.get("/", () => indexHtml)
-  .get("/", async () => Bun.file("public/index.html").text())
+  .get("/", async () => Bun.file(indexPath).text())
 
   .get("/cover/:mediaId/:type", async ({ params }) => {
     const { mediaId, type } = params;
