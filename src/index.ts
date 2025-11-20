@@ -1,6 +1,5 @@
 import { Elysia, t } from "elysia";
 import { html } from "@elysiajs/html";
-import { staticPlugin } from "@elysiajs/static";
 
 const indexHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -68,9 +67,8 @@ const indexHtml = `<!DOCTYPE html>
 
 export default new Elysia()
   .use(html())
-  .use(staticPlugin())
-  .get("/", async () => Bun.file("public/index.html").text())
-  //.get("/", () => indexHtml)
+  //.get("/", async () => Bun.file("public/index.html").text())
+  .get("/", () => indexHtml)
 
   .get("/cover/:mediaId/:type", async ({ params }) => {
     const { mediaId, type } = params;
