@@ -68,7 +68,8 @@ const indexHtml = `<!DOCTYPE html>
 export default new Elysia()
   .use(html())
   //.get("/", () => Bun.file("public/index.html").text())
-  .get("/", () => indexHtml)
+  //.get("/", () => indexHtml)
+  .get("/", async () => Bun.file("public/index.html").text())
 
   .get("/cover/:mediaId/:type", async ({ params }) => {
     const { mediaId, type } = params;
