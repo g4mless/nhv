@@ -86,11 +86,17 @@ export default new Elysia()
     const { id } = params;
 
     try {
-      const res = await fetch(`https://nhentai.net/api/gallery/${id}`)
+      const res = await fetch(`https://nhentai.net/api/v2/galleries/${id}`)
+
+      if (!res.ok) {
+        set.status = res.status;
+        return `<div class="text-red-500">Gallery not found</div>`;
+      }
+
       const data = await res.json()
 
-      const typeMap = { j: 'jpg', p: 'png', w: 'webp' };
-      const coverUrl = `/cover/${data.media_id}/${typeMap[data.images.cover.t as keyof typeof typeMap] || 'jpg'}`
+      const coverType = data.cover?.path?.split(".").pop() || "jpg";
+      const coverUrl = `/cover/${data.media_id}/${coverType}`
       const uploadDate = new Date(data.upload_date * 1000).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
       const tags = data.tags.reduce((acc: any, tag: any) => {
         if (!acc[tag.type]) acc[tag.type] = [];
@@ -124,6 +130,7 @@ export default new Elysia()
         </div>
       `;
     } catch (error) {
+      console.error(error);
       return `<div class="text-red-500">Gallery not found</div>`;
     }
   }, {
