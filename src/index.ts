@@ -38,7 +38,7 @@ const indexHtml = `<!DOCTYPE html>
         >
         <button 
           type="button"
-          class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 font-semibold transition"
+          class="mt-4 w-full px-4 py-2 bg-[#ed2553] hover:bg-[#ee4972] font-semibold transition"
           onclick="
             const id = document.getElementById('gallery-id').value;
             htmx.ajax('GET', '/view/' + id, {target: '#result'});
@@ -123,7 +123,7 @@ export default new Elysia()
 
       if (!res.ok) {
         set.status = res.status;
-        return `<div class="text-red-500">Gallery not found</div>`;
+        return `<div class="text-[#ed2553]">Gallery not found</div>`;
       }
 
       const data = await res.json()
@@ -137,33 +137,73 @@ export default new Elysia()
         return acc;
       }, {});
 
-      return `
-        <div class="bg-[#1f1f1f] overflow-hidden p-6">
-          <div class="flex justify-between items-start mb-4">
-            <div>
-              <h2 class="text-2xl font-bold">${data.title.pretty}</h2>
-              <p class="text-sm text-gray-400 mt-1">Uploaded: ${uploadDate}</p>
-            </div>
-            <a href="https://nhentai.net/g/${id}" target="_blank" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded transition">Visit</a>
-          </div>
-          <div class="mb-6">
-            <img src="${coverUrl}" alt="Cover" class="spoiler w-48 h-auto">
-            <p class="text-sm text-gray-400 mt-2">Click to reveal</p>
-          </div>
-          <div class="">
-            ${Object.entries(tags).map(([type, items]: any) => `
-              <div>
-                <div class="flex flex-wrap gap-2 mt-1">
-                  <span class="text-[#d9d9d9] capitalize font-[700]">${type}:</span>${items.map((tag: any) => `<span class="bg-[#4d4d4d] py-[1.82px] px-[5.46px] rounded-[4.2px] text-[14px] text-[#d9d9d9] font-[700]">${tag.name}</span>`).join('')}
-                </div>
-              </div>
-            `).join('')}
-          </div>
+  return `
+    <div class="bg-[#1f1f1f] overflow-hidden p-6">
+
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h2 class="text-2xl font-bold">${data.title.pretty}</h2>
+          <p class="text-sm text-gray-400 mt-1">Uploaded: ${uploadDate}</p>
         </div>
-      `;
+
+        <a
+          href="https://nhentai.net/g/${id}"
+          target="_blank"
+          class="px-3 py-1 bg-[#ed2553] hover:bg-[#ee4972] text-white text-sm font-semibold rounded transition"
+        >
+          Visit
+        </a>
+      </div>
+
+      <div class="flex flex-col md:flex-row md:gap-8">
+
+        <!-- Cover -->
+        <div class="shrink-0 mb-6 md:mb-0">
+          <img
+            src="${coverUrl}"
+            alt="Cover"
+            class="spoiler w-48 md:w-64 h-auto"
+          >
+
+          <p class="text-sm text-gray-400 mt-2">
+            Click to reveal
+          </p>
+        </div>
+
+        <!-- Metadata -->
+        <div class="flex-1 min-w-0">
+          ${Object.entries(tags).map(([type, items]: any) => `
+            <div class="mb-[4px]">
+
+              <div class="flex flex-wrap gap-x-2 gap-y-1">
+
+                <span
+                  class="text-[#d9d9d9] text-[14px] capitalize font-[700]"
+                >
+                  ${type}:
+                </span>
+
+                ${items.map((tag: any) => `
+                  <span
+                    class="bg-[#4d4d4d] py-[1.82px] px-[5.46px] rounded-[4.2px] text-[14px] text-[#d9d9d9] font-[700]"
+                  >
+                    ${tag.name}
+                  </span>
+                `).join('')}
+
+              </div>
+
+            </div>
+          `).join('')}
+        </div>
+
+      </div>
+
+    </div>
+  `;
     } catch (error) {
       console.error(error);
-      return `<div class="text-red-500">Gallery not found</div>`;
+      return `<div class="text-[#ed2553]">Gallery not found</div>`;
     }
   }, {
     params: t.Object({ id: t.String()})
