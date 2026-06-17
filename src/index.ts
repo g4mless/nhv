@@ -82,7 +82,10 @@ const contentTypeByImageType: Record<string, string> = {
 const app = new Elysia({ aot: false })
   .use(html())
   //.get("/", async () => Bun.file("public/index.html").text())
-  .get("/", () => indexHtml)
+  .get("/", ({ set }) => {
+    set.headers["content-type"] = "text/html; charset=utf-8";
+    return indexHtml;
+  })
 
   .get("/cover/:mediaId/:type", async ({ params }) => {
     const { mediaId, type } = params;
@@ -119,6 +122,7 @@ const app = new Elysia({ aot: false })
 
   .get("/view/:id", async ({ params, set }) => {
     const { id } = params;
+    set.headers["content-type"] = "text/html; charset=utf-8";
 
     try {
       const res = await fetch(`https://nhentai.net/api/v2/galleries/${id}`)
