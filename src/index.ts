@@ -77,7 +77,9 @@ const contentTypeByImageType: Record<string, string> = {
   jpeg: "image/jpeg",
 };
 
-const app = new Elysia()
+// aot: false disables Elysia's runtime code generation (`new Function`),
+// which Cloudflare Workers forbids — without this the Worker throws on every request.
+const app = new Elysia({ aot: false })
   .use(html())
   //.get("/", async () => Bun.file("public/index.html").text())
   .get("/", () => indexHtml)
