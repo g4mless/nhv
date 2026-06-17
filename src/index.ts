@@ -1,5 +1,12 @@
 import { Elysia, t } from "elysia";
-import { html } from "@elysiajs/html";
+
+// Returning a real Response guarantees the content-type survives on Cloudflare
+// Workers, where Elysia's string->HTML mapping (aot:false / html plugin) is unreliable.
+const htmlResponse = (body: string, status = 200) =>
+  new Response(body, {
+    status,
+    headers: { "content-type": "text/html; charset=utf-8" },
+  });
 
 const indexHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -80,12 +87,8 @@ const contentTypeByImageType: Record<string, string> = {
 // aot: false disables Elysia's runtime code generation (`new Function`),
 // which Cloudflare Workers forbids — without this the Worker throws on every request.
 const app = new Elysia({ aot: false })
-  .use(html())
   //.get("/", async () => Bun.file("public/index.html").text())
-  .get("/", ({ set }) => {
-    set.headers["content-type"] = "text/html; charset=utf-8";
-    return indexHtml;
-  })
+  .get("/", () => htmlResponse(indexHtml))
 
   .get("/cover/:mediaId/:type", async ({ params }) => {
     const { mediaId, type } = params;
@@ -120,16 +123,14 @@ const app = new Elysia({ aot: false })
     params: t.Object({ mediaId: t.String(), type: t.String() })
   })
 
-  .get("/view/:id", async ({ params, set }) => {
+  .get("/view/:id", async ({ params }) => {
     const { id } = params;
-    set.headers["content-type"] = "text/html; charset=utf-8";
 
     try {
       const res = await fetch(`https://nhentai.net/api/v2/galleries/${id}`)
 
       if (!res.ok) {
-        set.status = res.status;
-        return `<div class="text-[#ed2553]">Gallery not found</div>`;
+        return htmlResponse(`<div class="text-[#ed2553]">Gallery not found</div>`, res.status);
       }
 
       const data = await res.json()
@@ -143,7 +144,7 @@ const app = new Elysia({ aot: false })
         return acc;
       }, {});
 
-  return `
+  return htmlResponse(`
     <div class="bg-[#1f1f1f] overflow-hidden p-6">
 
       <div class="flex justify-between items-start mb-4">
@@ -206,10 +207,10 @@ const app = new Elysia({ aot: false })
       </div>
 
     </div>
-  `;
+  `);
     } catch (error) {
       console.error(error);
-      return `<div class="text-[#ed2553]">Gallery not found</div>`;
+      return htmlResponse(`<div class="text-[#ed2553]">Gallery not found</div>`);
     }
   }, {
     params: t.Object({ id: t.String()})
