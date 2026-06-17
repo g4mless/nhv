@@ -77,8 +77,8 @@ const contentTypeByImageType: Record<string, string> = {
   jpeg: "image/jpeg",
 };
 
-export default new Elysia()
-  .use(html()).listen(3000)
+const app = new Elysia()
+  .use(html())
   //.get("/", async () => Bun.file("public/index.html").text())
   .get("/", () => indexHtml)
 
@@ -208,3 +208,11 @@ export default new Elysia()
   }, {
     params: t.Object({ id: t.String()})
   })
+
+// Local dev with Bun (`bun run src/index.ts`) still starts a server.
+// On Cloudflare Workers there is no `Bun` global, so we just export the app.
+if (typeof Bun !== "undefined") {
+  app.listen(3000)
+}
+
+export default app
