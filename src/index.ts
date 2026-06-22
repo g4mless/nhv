@@ -36,18 +36,24 @@ const indexHtml = `<!DOCTYPE html>
       <h1 class="text-4xl font-bold mb-8">nh***** viewer</h1>
       
       <div class="mb-8">
-        <input 
-          type="text" 
-          id="gallery-id" 
-          placeholder="Enter gallery ID (6 digits)" 
+        <input
+          type="text"
+          id="gallery-id"
+          placeholder="Enter gallery ID (1-6 digits)"
           class="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
           maxlength="6"
+          pattern="[0-9]+"
+          title="Gallery ID must be numeric"
         >
-        <button 
+        <button
           type="button"
           class="mt-4 w-full px-4 py-2 bg-[#ed2553] hover:bg-[#ee4972] font-semibold transition"
           onclick="
-            const id = document.getElementById('gallery-id').value;
+            const id = document.getElementById('gallery-id').value.trim();
+            if (!/^[0-9]+$/.test(id) || id.length === 0) {
+              alert('Please enter a valid gallery ID (numeric, 1-6 digits)');
+              return;
+            }
             htmx.ajax('GET', '/view/' + id, {target: '#result'});
           "
         >
@@ -64,6 +70,11 @@ const indexHtml = `<!DOCTYPE html>
       if (e.key === 'Enter') {
         document.querySelector('button').click();
       }
+    });
+
+    document.getElementById('gallery-id').addEventListener('input', (e) => {
+      // Hanya izinkan angka
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
     });
 
     document.addEventListener('click', (e) => {
