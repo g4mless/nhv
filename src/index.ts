@@ -31,7 +31,7 @@ const indexHtml = `<!DOCTYPE html>
   </style>
 </head>
 <body class="bg-[#0d0d0d] text-white">
-  <div class="min-h-screen p-8">
+  <div class="min-h-screen p-4 md:p-8">
     <div class="max-w-2xl mx-auto">
       <h1 class="text-4xl font-bold mb-8">nh***** viewer</h1>
       
@@ -156,7 +156,7 @@ const app = new Elysia({ aot: false })
       }, {});
 
   return htmlResponse(`
-    <div class="bg-[#1f1f1f] overflow-hidden p-6">
+    <div class="bg-[#1f1f1f] overflow-hidden p-4 md:p-6 -mx-4 md:mx-0 rounded-none md:rounded-lg">
 
       <div class="flex justify-between items-start mb-4">
         <div>
